@@ -149,7 +149,7 @@ export default function TestingPage() {
           <div className="text-center">
             <h3 className="text-2xl font-bold text-gray-900 mb-4">Not Ready to Invest in Testing?</h3>
             <p className="text-lg text-gray-700 mb-6">
-              No problem! If you don't select any testing option, your idea will be <strong>automatically published</strong> to our public marketplace in <strong>3 days</strong> where other entrepreneurs and investors can discover it.
+              No problem! If you don't select any testing option, your idea will be <strong>automatically published</strong> to our <a href="/marketplace" className="text-blue-600 hover:text-blue-800 font-semibold underline">public marketplace</a> in <strong>3 days</strong> where other entrepreneurs and investors can discover it.
             </p>
             
             <div className="bg-white p-6 rounded-xl shadow-sm mb-6">
