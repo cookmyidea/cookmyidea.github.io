@@ -5,6 +5,7 @@ import { useRouter, useParams } from 'next/navigation';
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { apiService, type IdeaObject } from '@/services/api';
+import { IdeaPageWrapper } from '@/components/IdeaPageWrapper';
 
 export default function EvaluationPage() {
   const [analysisData, setAnalysisData] = useState<IdeaObject['initial_analyze']['data'] | null>(null);
@@ -59,7 +60,7 @@ export default function EvaluationPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-white">
+      <IdeaPageWrapper ideaId={ideaId} currentStep="evaluation" layout="full-width" isLoading={true}>
         <div className="container mx-auto px-4 py-16">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             {/* Left side - Business Idea Title Skeleton */}
@@ -90,13 +91,13 @@ export default function EvaluationPage() {
             </div>
           </div>
         </div>
-      </div>
+      </IdeaPageWrapper>
     );
   }
 
   if (isAnalysisRunning) {
     return (
-      <div className="min-h-screen bg-white">
+      <IdeaPageWrapper ideaId={ideaId} currentStep="evaluation" layout="full-width" isLoading={true}>
         <div className="container mx-auto px-4 py-16">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             {/* Left side - Business Idea Title Skeleton */}
@@ -127,25 +128,28 @@ export default function EvaluationPage() {
             </div>
           </div>
         </div>
-      </div>
+      </IdeaPageWrapper>
     );
   }
 
   if (!analysisData) {
     return (
-      <div className="min-h-screen bg-white text-gray-800 flex items-center justify-center">
+      <IdeaPageWrapper ideaId={ideaId} currentStep="evaluation" layout="full-width">
+        <div className="text-gray-800 flex items-center justify-center min-h-screen">
         <div className="text-center">
           <p className="text-lg text-gray-500 mb-4">Analysis not found</p>
           <Button onClick={handleTryAnotherIdea}>← Back to home</Button>
         </div>
-      </div>
+        </div>
+      </IdeaPageWrapper>
     );
   }
 
   const { business_idea, analysis } = analysisData;
 
   return (
-    <div className="min-h-screen bg-white text-gray-800">
+    <IdeaPageWrapper ideaId={ideaId} currentStep="evaluation" layout="full-width">
+      <div className="text-gray-800">
       <div className="container mx-auto px-4 py-16">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           {/* Left side - Business Idea Title */}
@@ -226,6 +230,7 @@ export default function EvaluationPage() {
           </div>
         </div>
       </div>
-    </div>
+      </div>
+    </IdeaPageWrapper>
   );
 }

@@ -3,17 +3,8 @@
 import { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { apiService, type PainPointData, type IdeaObject } from '@/services/api';
-import { 
-  ClipboardCheck,
-  AlertTriangle,
-  Lightbulb,
-  ToyBrick,
-  CircleDollarSign,
-  PanelTop,
-  Target,
-  FileText
-} from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { IdeaPageWrapper } from '@/components/IdeaPageWrapper';
 
 export default function PainPointsPage() {
   const [data, setData] = useState<IdeaObject['ai_pain_point_analysis']['data'] | null>(null);
@@ -82,33 +73,7 @@ export default function PainPointsPage() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen bg-white">
-        <aside className="w-64 bg-gray-50 p-8 border-r">
-          <nav>
-            <ul>
-              <li className="mb-4">
-                <div className="flex items-center p-2">
-                  <div className="mr-2 h-4 w-4 bg-gray-200 rounded animate-pulse"></div>
-                  <div className="h-4 w-24 bg-gray-200 rounded animate-pulse"></div>
-                </div>
-              </li>
-              <li className="mb-4">
-                <div className="flex items-center bg-blue-100 rounded-lg p-2">
-                  <div className="mr-2 h-4 w-4 bg-blue-200 rounded animate-pulse"></div>
-                  <div className="h-4 w-20 bg-blue-200 rounded animate-pulse"></div>
-                </div>
-              </li>
-              {[1, 2, 3, 4, 5, 6].map((i) => (
-                <li key={i} className="mb-4">
-                  <div className="flex items-center p-2">
-                    <div className="mr-2 h-4 w-4 bg-gray-200 rounded animate-pulse"></div>
-                    <div className="h-4 w-16 bg-gray-200 rounded animate-pulse"></div>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </nav>
-        </aside>
+      <IdeaPageWrapper ideaId={ideaId} currentStep="pain-points" isLoading={true}>
 
         <main className="flex-1 p-8">
           <header className="flex justify-between items-center mb-8">
@@ -148,39 +113,13 @@ export default function PainPointsPage() {
             </div>
           </div>
         </main>
-      </div>
+      </IdeaPageWrapper>
     );
   }
 
   if (isAnalysisRunning) {
     return (
-      <div className="flex min-h-screen bg-white">
-        <aside className="w-64 bg-gray-50 p-8 border-r">
-          <nav>
-            <ul>
-              <li className="mb-4">
-                <div className="flex items-center p-2">
-                  <div className="mr-2 h-4 w-4 bg-gray-200 rounded animate-pulse"></div>
-                  <div className="h-4 w-24 bg-gray-200 rounded animate-pulse"></div>
-                </div>
-              </li>
-              <li className="mb-4">
-                <div className="flex items-center bg-blue-100 rounded-lg p-2">
-                  <div className="mr-2 h-4 w-4 bg-blue-200 rounded animate-pulse"></div>
-                  <div className="h-4 w-20 bg-blue-200 rounded animate-pulse"></div>
-                </div>
-              </li>
-              {[1, 2, 3, 4, 5, 6].map((i) => (
-                <li key={i} className="mb-4">
-                  <div className="flex items-center p-2">
-                    <div className="mr-2 h-4 w-4 bg-gray-200 rounded animate-pulse"></div>
-                    <div className="h-4 w-16 bg-gray-200 rounded animate-pulse"></div>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </nav>
-        </aside>
+      <IdeaPageWrapper ideaId={ideaId} currentStep="pain-points" isLoading={true}>
 
         <main className="flex-1 p-8">
           <header className="flex justify-between items-center mb-8">
@@ -220,7 +159,7 @@ export default function PainPointsPage() {
             </div>
           </div>
         </main>
-      </div>
+      </IdeaPageWrapper>
     );
   }
 
@@ -261,49 +200,9 @@ export default function PainPointsPage() {
     }
   };
 
-  const iconMapping: { [key: string]: React.ElementType } = {
-    'Initial evaluation': ClipboardCheck,
-    'Pain Points': AlertTriangle,
-    'Solution': Lightbulb,
-    'Prototype': ToyBrick,
-    'Monetization': CircleDollarSign,
-    'Landing Pages': PanelTop,
-    'Ads Test Campaign': Target,
-    'MVP Document': FileText,
-  };
 
   return (
-    <div className="flex min-h-screen bg-white">
-      <aside className="w-64 bg-gray-50 p-8 border-r">
-        <nav>
-          <ul>
-            <li className="mb-4">
-              <a href={`/${ideaId}/evaluation`} className="flex items-center text-sm font-medium text-gray-700 hover:text-blue-600">
-                <ClipboardCheck className="mr-2 h-4 w-4" />
-                Initial evaluation
-              </a>
-            </li>
-            <li className="mb-4">
-              <a href="#" className="flex items-center text-sm font-medium text-blue-600 bg-blue-100 rounded-lg p-2">
-                <AlertTriangle className="mr-2 h-4 w-4" />
-                Pain Points
-              </a>
-            </li>
-            {['Solution', 'Prototype', 'Monetization', 'Landing Pages', 'Ads Test Campaign', 'MVP Document'].map((item) => {
-              const Icon = iconMapping[item];
-              return (
-                <li key={item} className="mb-4">
-                  <a href="#" className="flex items-center text-sm font-medium text-gray-400 cursor-not-allowed">
-                    {Icon && <Icon className="mr-2 h-4 w-4" />}
-                    {item}
-                  </a>
-                </li>
-              );
-            })}
-          </ul>
-        </nav>
-      </aside>
-
+    <IdeaPageWrapper ideaId={ideaId} currentStep="pain-points">
       <main className="flex-1 p-8">
         <header className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold">Pain Point Analysis</h1>
@@ -369,6 +268,6 @@ export default function PainPointsPage() {
           </div>
         </div>
       </main>
-    </div>
+    </IdeaPageWrapper>
   );
 }
