@@ -1,4 +1,6 @@
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import { apiService } from '@/services/api';
 import { 
   ClipboardCheck,
   AlertTriangle,
@@ -27,6 +29,32 @@ interface IdeaNavigationSidebarProps {
 }
 
 export function IdeaNavigationSidebar({ ideaId, currentStep, isLoading = false }: IdeaNavigationSidebarProps) {
+  const [availableData, setAvailableData] = useState<Set<string>>(new Set());
+
+  useEffect(() => {
+    const checkDataAvailability = async () => {
+      try {
+        const ideaObject = await apiService.getIdeaObject(ideaId);
+        const available = new Set<string>();
+        
+        // Check which analyses have data
+        if (ideaObject.initial_analyze) available.add('evaluation');
+        if (ideaObject.ai_pain_point_analysis) available.add('pain-points');
+        if (ideaObject.technical_solution) available.add('solution');
+        if (ideaObject.prototype_description) available.add('prototype');
+        if (ideaObject.monetization_strategies) available.add('monetization');
+        if (ideaObject.landing_pages) available.add('landing-pages');
+        
+        setAvailableData(available);
+      } catch (error) {
+        console.error('Error checking data availability:', error);
+      }
+    };
+
+    if (ideaId && !isLoading) {
+      checkDataAvailability();
+    }
+  }, [ideaId, isLoading]);
   const allNavigationItems: NavigationItem[] = [
     {
       key: 'evaluation',
@@ -93,22 +121,18 @@ export function IdeaNavigationSidebar({ ideaId, currentStep, isLoading = false }
     }
   ];
 
-  // Find current step order and enable next item
-  const currentStepOrder = allNavigationItems.find(item => item.isActive)?.order || 0;
-  
   const navigationItems = allNavigationItems.map(item => {
-    // If we're on the testing step (final step), allow navigation to all previous steps
-    if (currentStep === 'testing') {
-      return {
-        ...item,
-        isDisabled: item.order > 7, // Only disable future steps beyond testing
-      };
-    }
+    // Enable item if:
+    // 1. It's the current active step, OR
+    // 2. We have data for this step, OR  
+    // 3. It's testing step (final step, always available)
+    const hasData = availableData.has(item.key);
+    const isCurrent = item.isActive;
+    const isTesting = item.key === 'testing';
     
-    // Normal flow: enable current and next item only
     return {
       ...item,
-      isDisabled: item.order > currentStepOrder + 1,
+      isDisabled: !hasData && !isCurrent && !isTesting,
     };
   });
 

@@ -5,7 +5,7 @@ import { useRouter, useParams } from 'next/navigation';
 import { apiService, type IdeaObject } from '@/services/api';
 import { Button } from '@/components/ui/button';
 import { IdeaPageWrapper } from '@/components/IdeaPageWrapper';
-import { DollarSign, Users, TrendingUp } from 'lucide-react';
+import { DollarSign, Users, TrendingUp, ExternalLink, Sparkles, Target, BarChart3, CheckCircle } from 'lucide-react';
 
 export default function MonetizationPage() {
   const [data, setData] = useState<IdeaObject['monetization_strategies']['data'] | null>(null);
@@ -250,84 +250,117 @@ export default function MonetizationPage() {
           </div>
         </header>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-          {/* Left side - Strategy Overview */}
-          <div className="lg:pr-8">
-            <div className="mb-8">
-              <h2 className="text-4xl font-bold text-gray-900 leading-tight mb-6">
+        {/* Hero Section */}
+        <div className="bg-gradient-to-br from-green-50 via-white to-blue-50 rounded-2xl p-8 mb-12">
+          <div className="max-w-4xl mx-auto">
+            <div className="text-center mb-8">
+              <div className="inline-flex items-center px-4 py-2 bg-green-100 text-green-800 rounded-full text-sm font-medium mb-4">
+                <Sparkles className="mr-2 h-4 w-4" />
+                Monetization Strategy
+              </div>
+              <h2 className="text-4xl font-bold text-gray-900 mb-4">
                 {primaryStrategy.strategy_name}
               </h2>
-              
-              <p className="text-lg text-green-600 font-medium mb-6">
+              <div className="inline-block px-4 py-2 bg-green-600 text-white rounded-full text-lg font-semibold mb-4">
                 {primaryStrategy.model_type.charAt(0).toUpperCase() + primaryStrategy.model_type.slice(1)} Model
-              </p>
-
-              <p className="text-lg text-gray-600 leading-relaxed mb-8">
+              </div>
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
                 {primaryStrategy.value_proposition}
               </p>
+            </div>
 
+            {/* Revenue Projections Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+              <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 text-center">
+                <div className="text-3xl font-bold text-green-600 mb-2">{primaryStrategy.revenue_projections.year_1}</div>
+                <div className="text-sm text-green-800 font-medium">Year 1 Revenue</div>
+              </div>
+              <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 text-center">
+                <div className="text-3xl font-bold text-blue-600 mb-2">{primaryStrategy.revenue_projections.year_2}</div>
+                <div className="text-sm text-blue-800 font-medium">Year 2 Revenue</div>
+              </div>
+              <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 text-center">
+                <div className="text-3xl font-bold text-purple-600 mb-2">{primaryStrategy.revenue_projections.year_3}</div>
+                <div className="text-sm text-purple-800 font-medium">Year 3 Revenue</div>
+              </div>
+            </div>
+
+            {/* Action Button */}
+            <div className="text-center">
               <Button 
-                variant="outline" 
+                size="lg"
                 onClick={() => router.push(`/${ideaId}/monetization/details`)}
-                className="text-blue-600 border-blue-600 hover:bg-blue-50"
+                className="bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white px-8 py-3 text-lg font-medium shadow-lg"
               >
-                Learn more
+                <ExternalLink className="mr-2 h-5 w-5" />
+                View Detailed Analysis
               </Button>
             </div>
           </div>
+        </div>
 
-          {/* Right side - Key Information */}
-          <div className="space-y-8">
-            {/* Target Customer */}
-            <div>
-              <h3 className="text-xl font-bold text-gray-900 mb-4">Target Customer</h3>
-              <div className="flex items-center p-4 bg-blue-50 rounded-lg">
-                <Users className="mr-3 h-5 w-5 text-blue-600" />
-                <p className="text-gray-800 font-medium">{primaryStrategy.target_customer}</p>
+        {/* Key Information Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+          {/* Target Customer */}
+          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+            <div className="flex items-center mb-4">
+              <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                <Users className="h-5 w-5 text-blue-600" />
               </div>
+              <h3 className="ml-3 text-xl font-bold text-gray-900">Target Customer</h3>
             </div>
+            <p className="text-gray-700 leading-relaxed">{primaryStrategy.target_customer}</p>
+          </div>
 
-            {/* Pricing Structure */}
-            <div>
-              <h3 className="text-xl font-bold text-gray-900 mb-4">Pricing Tiers</h3>
-              <div className="space-y-3">
-                {primaryStrategy.pricing_structure.pricing_tiers.map((tier, index) => (
-                  <div key={index} className="flex items-start p-3 bg-gray-50 rounded-lg">
-                    <DollarSign className="mr-3 h-4 w-4 text-green-600 mt-1 flex-shrink-0" />
-                    <p className="text-gray-700 text-sm">{tier}</p>
-                  </div>
-                ))}
+          {/* Competitive Advantage */}
+          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+            <div className="flex items-center mb-4">
+              <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                <BarChart3 className="h-5 w-5 text-purple-600" />
               </div>
+              <h3 className="ml-3 text-xl font-bold text-gray-900">Competitive Edge</h3>
             </div>
+            <p className="text-gray-700 leading-relaxed">{primaryStrategy.competitive_benchmarking}</p>
+          </div>
+        </div>
 
-            {/* Revenue Projections */}
-            <div>
-              <h3 className="text-xl font-bold text-gray-900 mb-4">Revenue Projections</h3>
-              <div className="space-y-3">
-                <div className="flex justify-between items-center p-3 bg-green-50 rounded-lg">
-                  <span className="font-medium text-green-900">Year 1</span>
-                  <span className="font-bold text-green-800">{primaryStrategy.revenue_projections.year_1}</span>
-                </div>
-                <div className="flex justify-between items-center p-3 bg-green-50 rounded-lg">
-                  <span className="font-medium text-green-900">Year 2</span>
-                  <span className="font-bold text-green-800">{primaryStrategy.revenue_projections.year_2}</span>
-                </div>
-                <div className="flex justify-between items-center p-3 bg-green-50 rounded-lg">
-                  <span className="font-medium text-green-900">Year 3</span>
-                  <span className="font-bold text-green-800">{primaryStrategy.revenue_projections.year_3}</span>
-                </div>
-              </div>
+        {/* Pricing Structure */}
+        <div className="bg-white rounded-xl p-8 shadow-sm border border-gray-100 mb-12">
+          <div className="flex items-center mb-6">
+            <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+              <DollarSign className="h-5 w-5 text-green-600" />
             </div>
-
-            {/* Competitive Advantage */}
-            <div>
-              <h3 className="text-xl font-bold text-gray-900 mb-4">Competitive Benchmarking</h3>
-              <div className="p-4 bg-blue-50 rounded-lg">
+            <h3 className="ml-3 text-2xl font-bold text-gray-900">Pricing Structure</h3>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {primaryStrategy.pricing_structure.pricing_tiers.map((tier, index) => (
+              <div key={index} className="p-4 bg-gray-50 rounded-lg border border-gray-200">
                 <div className="flex items-start">
-                  <TrendingUp className="mr-3 h-5 w-5 text-blue-600 mt-1 flex-shrink-0" />
-                  <p className="text-blue-800 font-medium">{primaryStrategy.competitive_benchmarking}</p>
+                  <CheckCircle className="mr-3 h-5 w-5 text-green-500 mt-1 flex-shrink-0" />
+                  <p className="text-gray-700 font-medium">{tier}</p>
                 </div>
               </div>
+            ))}
+          </div>
+
+          <div className="mt-6 p-4 bg-gradient-to-r from-blue-50 to-green-50 rounded-lg">
+            <div className="flex items-center mb-2">
+              <Target className="mr-2 h-5 w-5 text-blue-600" />
+              <span className="font-semibold text-gray-900">Pricing Model:</span>
+            </div>
+            <p className="text-gray-700">{primaryStrategy.pricing_structure.pricing_model}</p>
+            <div className="mt-2 flex items-center space-x-4">
+              <span className="text-sm font-medium text-gray-600">
+                Billing: {primaryStrategy.pricing_structure.billing_frequency}
+              </span>
+              <span className={`text-sm font-medium px-2 py-1 rounded-full ${
+                primaryStrategy.pricing_structure.free_tier 
+                  ? 'bg-green-100 text-green-800' 
+                  : 'bg-gray-100 text-gray-800'
+              }`}>
+                {primaryStrategy.pricing_structure.free_tier ? 'Free Tier Available' : 'No Free Tier'}
+              </span>
             </div>
           </div>
         </div>

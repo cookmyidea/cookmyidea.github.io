@@ -5,6 +5,7 @@ import { useRouter, useParams } from 'next/navigation';
 import { apiService, type IdeaObject } from '@/services/api';
 import { Button } from '@/components/ui/button';
 import { IdeaPageWrapper } from '@/components/IdeaPageWrapper';
+import { Lightbulb, ExternalLink, CheckCircle, Workflow, Star, Zap, Code, Database, Cloud } from 'lucide-react';
 
 export default function SolutionPage() {
   const [data, setData] = useState<IdeaObject['technical_solution']['data'] | null>(null);
@@ -248,76 +249,116 @@ export default function SolutionPage() {
           </div>
         </header>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-          {/* Left side - Solution Overview */}
-          <div className="lg:pr-8">
-            <div className="mb-8">
-              <h2 className="text-4xl font-bold text-gray-900 leading-tight mb-6">
+        {/* Hero Section */}
+        <div className="bg-gradient-to-br from-blue-50 via-white to-purple-50 rounded-2xl p-8 mb-12">
+          <div className="max-w-4xl mx-auto">
+            <div className="text-center mb-8">
+              <div className="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-800 rounded-full text-sm font-medium mb-4">
+                <Lightbulb className="mr-2 h-4 w-4" />
+                Technical Solution
+              </div>
+              <h2 className="text-4xl font-bold text-gray-900 mb-4">
                 {solution_overview.solution_name}
               </h2>
-              
-              <p className="text-lg text-gray-600 leading-relaxed mb-8">
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
                 {solution_overview.core_functionality}
               </p>
+            </div>
 
+            {/* Action Button */}
+            <div className="text-center">
               <Button 
-                variant="outline" 
+                size="lg"
                 onClick={() => router.push(`/${ideaId}/solution/details`)}
-                className="text-blue-600 border-blue-600 hover:bg-blue-50"
+                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-3 text-lg font-medium shadow-lg"
               >
-                Learn more
+                <ExternalLink className="mr-2 h-5 w-5" />
+                View Technical Details
               </Button>
             </div>
           </div>
+        </div>
 
-          {/* Right side - Key Information */}
-          <div className="space-y-8">
-            {/* User Workflow */}
-            <div>
-              <h3 className="text-xl font-bold text-gray-900 mb-4">User Workflow</h3>
+        {/* Key Features Section */}
+        <div className="bg-white rounded-xl p-8 shadow-sm border border-gray-100 mb-12">
+          <div className="flex items-center mb-6">
+            <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+              <Star className="h-5 w-5 text-green-600" />
+            </div>
+            <h3 className="ml-3 text-2xl font-bold text-gray-900">Key Features</h3>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {solution_overview.key_features.map((feature, index) => (
+              <div key={index} className="p-4 bg-green-50 rounded-lg border border-green-200">
+                <div className="flex items-start">
+                  <CheckCircle className="mr-3 h-5 w-5 text-green-500 mt-1 flex-shrink-0" />
+                  <span className="text-green-800 font-medium">{feature}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* User Workflow Section */}
+        <div className="bg-white rounded-xl p-8 shadow-sm border border-gray-100 mb-12">
+          <div className="flex items-center mb-6">
+            <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+              <Workflow className="h-5 w-5 text-blue-600" />
+            </div>
+            <h3 className="ml-3 text-2xl font-bold text-gray-900">User Workflow</h3>
+          </div>
+          
+          <div className="space-y-4">
+            {solution_overview.user_workflow.map((step, index) => (
+              <div key={index} className="flex items-start p-4 bg-blue-50 rounded-lg">
+                <div className="flex-shrink-0 w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold mr-4 mt-0.5">
+                  {index + 1}
+                </div>
+                <p className="text-blue-800 font-medium leading-relaxed">{step}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Value Proposition & Tech Stack */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+          {/* Value Proposition */}
+          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+            <div className="flex items-center mb-4">
+              <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                <Zap className="h-5 w-5 text-purple-600" />
+              </div>
+              <h3 className="ml-3 text-xl font-bold text-gray-900">Value Proposition</h3>
+            </div>
+            <p className="text-gray-700 leading-relaxed">{solution_overview.value_proposition}</p>
+          </div>
+
+          {/* Tech Stack Preview */}
+          {data?.technical_architecture && (
+            <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+              <div className="flex items-center mb-4">
+                <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
+                  <Code className="h-5 w-5 text-gray-600" />
+                </div>
+                <h3 className="ml-3 text-xl font-bold text-gray-900">Tech Stack</h3>
+              </div>
               <div className="space-y-3">
-                {solution_overview.user_workflow.map((step, index) => (
-                  <div key={index} className="flex items-start">
-                    <div className="flex-shrink-0 w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-medium mr-3 mt-0.5">
-                      {index + 1}
-                    </div>
-                    <p className="text-gray-700 leading-relaxed">{step}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Key Features */}
-            <div>
-              <h3 className="text-xl font-bold text-gray-900 mb-4">Key Features</h3>
-              <div className="space-y-2">
-                {solution_overview.key_features.map((feature, index) => (
-                  <div key={index} className="flex items-start">
-                    <div className="w-2 h-2 bg-gray-900 rounded-full mr-3 mt-3 flex-shrink-0"></div>
-                    <p className="text-gray-700">{feature}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Value Proposition */}
-            <div>
-              <h3 className="text-xl font-bold text-gray-900 mb-4">Value Proposition</h3>
-              <div className="space-y-4">
-                <div>
-                  <div className="flex items-start mb-2">
-                    <div className="w-2 h-2 bg-gray-900 rounded-full mr-3 mt-3 flex-shrink-0"></div>
-                    <div>
-                      <span className="font-semibold text-gray-900">Employers:</span>
-                      <span className="text-gray-700 ml-1">
-                        {solution_overview.value_proposition}
-                      </span>
-                    </div>
-                  </div>
+                <div className="flex items-center">
+                  <Code className="mr-2 h-4 w-4 text-blue-600" />
+                  <span className="text-sm text-gray-600">Frontend: {data.technical_architecture.tech_stack.frontend.slice(0, 2).join(', ')}</span>
+                </div>
+                <div className="flex items-center">
+                  <Database className="mr-2 h-4 w-4 text-green-600" />
+                  <span className="text-sm text-gray-600">Backend: {data.technical_architecture.tech_stack.backend.slice(0, 2).join(', ')}</span>
+                </div>
+                <div className="flex items-center">
+                  <Cloud className="mr-2 h-4 w-4 text-purple-600" />
+                  <span className="text-sm text-gray-600">AI/ML: {data.technical_architecture.tech_stack.ai_ml_components.slice(0, 2).join(', ')}</span>
                 </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
 
         {/* Bottom Navigation */}

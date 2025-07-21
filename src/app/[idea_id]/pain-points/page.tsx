@@ -5,6 +5,7 @@ import { useRouter, useParams } from 'next/navigation';
 import { apiService, type PainPointData, type IdeaObject } from '@/services/api';
 import { Button } from '@/components/ui/button';
 import { IdeaPageWrapper } from '@/components/IdeaPageWrapper';
+import { AlertTriangle, ExternalLink, Target, Users, Brain, TrendingUp, CheckCircle, Lightbulb } from 'lucide-react';
 
 export default function PainPointsPage() {
   const [data, setData] = useState<IdeaObject['ai_pain_point_analysis']['data'] | null>(null);
@@ -225,65 +226,146 @@ export default function PainPointsPage() {
           </div>
         </header>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-          {/* Left side - Main Pain Point */}
-          <div className="lg:pr-8">
-            <div className="mb-8">
-              <h2 className="text-4xl font-bold text-gray-900 leading-tight mb-6">
+        {/* Hero Section */}
+        <div className="bg-gradient-to-br from-red-50 via-white to-orange-50 rounded-2xl p-8 mb-12">
+          <div className="max-w-4xl mx-auto">
+            <div className="text-center mb-8">
+              <div className="inline-flex items-center px-4 py-2 bg-red-100 text-red-800 rounded-full text-sm font-medium mb-4">
+                <AlertTriangle className="mr-2 h-4 w-4" />
+                Pain Point Analysis
+              </div>
+              <h2 className="text-4xl font-bold text-gray-900 mb-4">
                 {painPointData?.pain_point_title}
               </h2>
-              
-              <p className="text-lg text-gray-600 leading-relaxed mb-8">
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
                 {painPointData?.description}
               </p>
-
-              <Button 
-                variant="outline" 
-                onClick={() => router.push(`/${ideaId}/pain-points/details`)}
-                className="text-blue-600 border-blue-600 hover:bg-blue-50"
-              >
-                Learn more
-              </Button>
             </div>
-          </div>
 
-          {/* Right side - Key Information */}
-          <div className="space-y-8">
-            {/* AI Solution Approach */}
-            <div>
-              <h3 className="text-xl font-bold text-gray-900 mb-4">AI Solution Approach</h3>
-              <p className="text-gray-700 leading-relaxed mb-6">{aiSolutionApproach?.description}</p>
-              
-              <div className="space-y-4">
-                <div>
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="text-gray-700">AI Applicability Score</span>
-                    <span className="font-semibold text-gray-900">{painPointData?.ai_applicability_score}/10</span>
+            {/* Score Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+              <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                <div className="flex items-center mb-4">
+                  <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                    <Brain className="h-5 w-5 text-blue-600" />
                   </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div 
-                      className="bg-blue-600 h-2 rounded-full transition-all duration-300" 
-                      style={{ width: `${(painPointData?.ai_applicability_score || 0) * 10}%` }}
-                    ></div>
+                  <div className="ml-3">
+                    <h3 className="font-semibold text-gray-900">AI Applicability</h3>
+                    <div className="text-2xl font-bold text-blue-600">{painPointData?.ai_applicability_score}/10</div>
                   </div>
                 </div>
-                
-                <div>
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="text-gray-700">Business Impact Potential</span>
-                    <span className="font-semibold text-gray-900">{painPointData?.business_impact_potential}/10</span>
+                <div className="w-full bg-gray-200 rounded-full h-3">
+                  <div 
+                    className="bg-blue-600 h-3 rounded-full transition-all duration-500" 
+                    style={{ width: `${(painPointData?.ai_applicability_score || 0) * 10}%` }}
+                  ></div>
+                </div>
+              </div>
+
+              <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                <div className="flex items-center mb-4">
+                  <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                    <TrendingUp className="h-5 w-5 text-green-600" />
                   </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div 
-                      className="bg-blue-600 h-2 rounded-full transition-all duration-300" 
-                      style={{ width: `${(painPointData?.business_impact_potential || 0) * 10}%` }}
-                    ></div>
+                  <div className="ml-3">
+                    <h3 className="font-semibold text-gray-900">Business Impact</h3>
+                    <div className="text-2xl font-bold text-green-600">{painPointData?.business_impact_potential}/10</div>
                   </div>
+                </div>
+                <div className="w-full bg-gray-200 rounded-full h-3">
+                  <div 
+                    className="bg-green-600 h-3 rounded-full transition-all duration-500" 
+                    style={{ width: `${(painPointData?.business_impact_potential || 0) * 10}%` }}
+                  ></div>
                 </div>
               </div>
             </div>
+
+            {/* Action Button */}
+            <div className="text-center">
+              <Button 
+                size="lg"
+                onClick={() => router.push(`/${ideaId}/pain-points/details`)}
+                className="bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 text-white px-8 py-3 text-lg font-medium shadow-lg"
+              >
+                <ExternalLink className="mr-2 h-5 w-5" />
+                View Detailed Analysis
+              </Button>
+            </div>
           </div>
         </div>
+
+        {/* AI Solution Approach Section */}
+        <div className="bg-white rounded-xl p-8 shadow-sm border border-gray-100 mb-12">
+          <div className="flex items-center mb-6">
+            <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+              <Lightbulb className="h-5 w-5 text-purple-600" />
+            </div>
+            <h3 className="ml-3 text-2xl font-bold text-gray-900">AI Solution Approach</h3>
+          </div>
+          
+          <div className="mb-6">
+            <h4 className="text-xl font-semibold text-gray-800 mb-3">{aiSolutionApproach?.title}</h4>
+            <p className="text-gray-700 leading-relaxed text-lg">{aiSolutionApproach?.description}</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Technical Complexity */}
+            <div className="p-4 bg-blue-50 rounded-lg">
+              <div className="flex items-center mb-2">
+                <Target className="mr-2 h-5 w-5 text-blue-600" />
+                <span className="font-semibold text-gray-900">Technical Complexity</span>
+              </div>
+              <p className="text-blue-800">{aiSolutionApproach?.technical_complexity}</p>
+            </div>
+
+            {/* Development Timeline */}
+            <div className="p-4 bg-green-50 rounded-lg">
+              <div className="flex items-center mb-2">
+                <CheckCircle className="mr-2 h-5 w-5 text-green-600" />
+                <span className="font-semibold text-gray-900">Development Timeline</span>
+              </div>
+              <p className="text-green-800">{aiSolutionApproach?.development_timeline}</p>
+            </div>
+          </div>
+
+          {/* AI Technologies Required */}
+          {aiSolutionApproach?.ai_technologies_required && aiSolutionApproach.ai_technologies_required.length > 0 && (
+            <div className="mt-6">
+              <h4 className="font-semibold text-gray-900 mb-3">Required AI Technologies</h4>
+              <div className="flex flex-wrap gap-2">
+                {aiSolutionApproach.ai_technologies_required.map((tech, index) => (
+                  <span key={index} className="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm font-medium">
+                    {tech}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Affected Stakeholders */}
+        {painPointData?.affected_stakeholders && painPointData.affected_stakeholders.length > 0 && (
+          <div className="bg-white rounded-xl p-8 shadow-sm border border-gray-100 mb-12">
+            <div className="flex items-center mb-6">
+              <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
+                <Users className="h-5 w-5 text-orange-600" />
+              </div>
+              <h3 className="ml-3 text-2xl font-bold text-gray-900">Affected Stakeholders</h3>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {painPointData.affected_stakeholders.map((stakeholder, index) => (
+                <div key={index} className="p-4 bg-orange-50 rounded-lg border border-orange-200">
+                  <div className="flex items-center">
+                    <Users className="mr-3 h-4 w-4 text-orange-600 flex-shrink-0" />
+                    <span className="text-orange-800 font-medium">{stakeholder}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Bottom Navigation */}
         <div className="flex justify-between items-center mt-16 pt-8 border-t border-gray-200">
