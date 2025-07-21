@@ -7,8 +7,7 @@ import {
   CircleDollarSign,
   PanelTop,
   Target,
-  FileText,
-  Megaphone
+  FileText
 } from 'lucide-react';
 
 interface NavigationItem {
@@ -84,31 +83,13 @@ export function IdeaNavigationSidebar({ ideaId, currentStep, isLoading = false }
       order: 6,
     },
     {
-      key: 'ads-campaign',
-      label: 'Ads Campaign',
-      icon: Megaphone,
-      href: `/${ideaId}/ads-campaign`,
-      isActive: currentStep === 'ads-campaign',
-      isDisabled: true,
-      order: 7,
-    },
-    {
-      key: 'mvp-document',
-      label: 'MVP Document',
-      icon: FileText,
-      href: `/${ideaId}/mvp-document`,
-      isActive: currentStep === 'mvp-document',
-      isDisabled: true,
-      order: 8,
-    },
-    {
       key: 'testing',
       label: 'Testing',
       icon: Target,
       href: `/${ideaId}/testing`,
       isActive: currentStep === 'testing',
       isDisabled: true,
-      order: 9,
+      order: 7,
     }
   ];
 
@@ -116,11 +97,11 @@ export function IdeaNavigationSidebar({ ideaId, currentStep, isLoading = false }
   const currentStepOrder = allNavigationItems.find(item => item.isActive)?.order || 0;
   
   const navigationItems = allNavigationItems.map(item => {
-    // If we're on the testing step (final step), disable all other steps except completed ones
+    // If we're on the testing step (final step), allow navigation to all previous steps
     if (currentStep === 'testing') {
       return {
         ...item,
-        isDisabled: !item.isActive && item.order !== 9, // Only testing step is enabled
+        isDisabled: item.order > 7, // Only disable future steps beyond testing
       };
     }
     
