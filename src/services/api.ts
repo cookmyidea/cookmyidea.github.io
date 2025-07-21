@@ -138,6 +138,69 @@ export interface IdeaObject {
       duration: number;
       model: string;
     };
+    technical_solution: {
+      data: {
+        solution_overview: {
+          solution_name: string;
+          core_functionality: string;
+          user_workflow: string[];
+          key_features: string[];
+          value_proposition: string;
+        };
+        technical_architecture: {
+          tech_stack: {
+            frontend: string[];
+            backend: string[];
+            database: string[];
+            ai_ml_components: string[];
+            third_party_apis: string[];
+            cloud_infrastructure: string[];
+          };
+          system_components: Array<{
+            component_name: string;
+            purpose: string;
+            technology: string;
+            complexity: string;
+            dependencies: string[];
+          }>;
+          data_flow: string[];
+          integration_points: string[];
+        };
+        ai_implementation: {
+          model_selection: string;
+          training_approach: string;
+          data_pipeline: string[];
+          inference_method: string;
+          performance_requirements: string[];
+          accuracy_targets: string[];
+        };
+        development_plan: {
+          timeline: string;
+          team_requirements: string[];
+          development_phases: Array<{
+            phase_name: string;
+            duration: string;
+            deliverables: string[];
+            success_criteria: string[];
+            resource_requirements: string;
+          }>;
+          estimated_costs: {
+            development: string;
+            infrastructure: string;
+            third_party_services: string;
+            ongoing_maintenance: string;
+          };
+        };
+        scalability_considerations: {
+          performance_bottlenecks: string[];
+          scaling_strategies: string[];
+          infrastructure_requirements: string[];
+        };
+      };
+      usage: Usage;
+      duration: number;
+      model: string;
+    };
 
 }
 
@@ -174,6 +237,10 @@ class ApiService {
 
   async triggerPainPointAnalysis(ideaId: string): Promise<IdeaObject> {
     return this.makeRequest<IdeaObject>('run_pain_point_analysis', { idea_id: ideaId });
+  }
+
+  async triggerSolutionAnalysis(ideaId: string): Promise<IdeaObject> {
+    return this.makeRequest<IdeaObject>('run_solution', { idea_id: ideaId });
   }
 
   async getIdeaObject(ideaId: string): Promise<IdeaObject> {

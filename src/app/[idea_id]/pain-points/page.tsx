@@ -206,64 +206,102 @@ export default function PainPointsPage() {
       <main className="flex-1 p-8">
         <header className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold">Pain Point Analysis</h1>
-          <div>
-            <button 
+          <div className="flex space-x-2">
+            <Button 
+              variant="outline"
               onClick={handleTryOtherIdea}
-              className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border rounded-lg mr-2 cursor-pointer"
             >
               Try other idea
-            </button>
-            <button 
+            </Button>
+            <Button 
+              variant="outline"
               onClick={handleRedo}
-              className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border rounded-lg mr-2 cursor-pointer"
             >
               Redo
-            </button>
-            <button className="px-4 py-2 text-sm font-medium text-white bg-blue-600 border rounded-lg cursor-pointer">Next step →</button>
+            </Button>
+            <Button onClick={() => router.push(`/${ideaId}/solution`)}>
+              Solution →
+            </Button>
           </div>
         </header>
 
-        <div className="grid grid-cols-2 gap-8">
-          <div className="bg-gray-50 p-6 rounded-lg">
-            <h2 className="text-xl font-semibold mb-2">Main pain point</h2>
-            <h3 className="text-lg font-medium text-gray-800 mb-4">{painPointData?.pain_point_title}</h3>
-            <div className="text-gray-600">{painPointData?.description}</div>
-            <Button 
-              variant="link" 
-              className="mt-4 p-0 h-auto"
-              onClick={() => router.push(`/${ideaId}/pain-points/details`)}
-            >
-              View pain point details →
-            </Button>
-          </div>
-          <div className="bg-gray-50 p-6 rounded-lg">
-            <h2 className="text-xl font-semibold mb-2">AI Solution</h2>
-            <p className="text-gray-600 mb-4">{aiSolutionApproach?.description}</p>
-            <div className="flex items-center justify-between mb-2">
-              <span>AI Applicability Score</span>
-              <div className="flex items-center">
-                <div className="w-32 h-2 bg-green-200 rounded-full mr-2">
-                  <div className="h-2 bg-green-500 rounded-full" style={{ width: `${(painPointData?.ai_applicability_score || 0) * 10}%` }}></div>
-                </div>
-                <span>{painPointData?.ai_applicability_score}/10 High</span>
-              </div>
-            </div>
-            <div className="flex items-center justify-between">
-              <span>Business Impact Potential</span>
-              <div className="flex items-center">
-                <div className="w-32 h-2 bg-green-200 rounded-full mr-2">
-                  <div className="h-2 bg-green-500 rounded-full" style={{ width: `${(painPointData?.business_impact_potential || 0) * 10}%` }}></div>
-                </div>
-                <span>{painPointData?.business_impact_potential}/10 High</span>
-              </div>
-            </div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+          {/* Left side - Main Pain Point */}
+          <div className="lg:pr-8">
+            <div className="mb-8">
+              <h2 className="text-4xl font-bold text-gray-900 leading-tight mb-6">
+                {painPointData?.pain_point_title}
+              </h2>
+              
+              <p className="text-lg text-gray-600 leading-relaxed mb-8">
+                {painPointData?.description}
+              </p>
 
+              <Button 
+                variant="outline" 
+                onClick={() => router.push(`/${ideaId}/pain-points/details`)}
+                className="text-blue-600 border-blue-600 hover:bg-blue-50"
+              >
+                Learn more
+              </Button>
+            </div>
+          </div>
+
+          {/* Right side - Key Information */}
+          <div className="space-y-8">
+            {/* AI Solution Approach */}
+            <div>
+              <h3 className="text-xl font-bold text-gray-900 mb-4">AI Solution Approach</h3>
+              <p className="text-gray-700 leading-relaxed mb-6">{aiSolutionApproach?.description}</p>
+              
+              <div className="space-y-4">
+                <div>
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="text-gray-700">AI Applicability Score</span>
+                    <span className="font-semibold text-gray-900">{painPointData?.ai_applicability_score}/10</span>
+                  </div>
+                  <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div 
+                      className="bg-blue-600 h-2 rounded-full transition-all duration-300" 
+                      style={{ width: `${(painPointData?.ai_applicability_score || 0) * 10}%` }}
+                    ></div>
+                  </div>
+                </div>
+                
+                <div>
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="text-gray-700">Business Impact Potential</span>
+                    <span className="font-semibold text-gray-900">{painPointData?.business_impact_potential}/10</span>
+                  </div>
+                  <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div 
+                      className="bg-blue-600 h-2 rounded-full transition-all duration-300" 
+                      style={{ width: `${(painPointData?.business_impact_potential || 0) * 10}%` }}
+                    ></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom Navigation */}
+        <div className="flex justify-between items-center mt-16 pt-8 border-t border-gray-200">
+          <Button 
+            variant="outline" 
+            onClick={() => router.push(`/${ideaId}/evaluation`)}
+          >
+            ← Back to Evaluation
+          </Button>
+          <div className="flex space-x-4">
             <Button 
-              variant="link" 
-              className="mt-4 p-0 h-auto"
-              onClick={() => router.push(`/${ideaId}/pain-points/details`)}
+              variant="outline" 
+              onClick={handleTryOtherIdea}
             >
-              View solution details →
+              Try Another Idea
+            </Button>
+            <Button onClick={() => router.push(`/${ideaId}/solution`)}>
+              Next: Solution →
             </Button>
           </div>
         </div>
