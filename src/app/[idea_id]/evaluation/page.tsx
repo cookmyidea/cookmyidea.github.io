@@ -94,7 +94,13 @@ export default function EvaluationPage() {
                   </div>
                   <Progress value={value.score * 10} className={`w-full ${getProgressColor(value.score)}`} />
                   <p className="mt-4 text-gray-600">{value.summary}</p>
-                  <a href="#" className="text-blue-500 hover:underline mt-2 inline-block">Learn more</a>
+                  <Button 
+                    variant="link" 
+                    className="mt-2 p-0 h-auto"
+                    onClick={() => router.push(`/${ideaId}/evaluation/details`)}
+                  >
+                    Learn more
+                  </Button>
                 </div>
               ))}
             </div>

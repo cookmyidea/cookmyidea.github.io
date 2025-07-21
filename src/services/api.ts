@@ -97,7 +97,7 @@ export interface IdeaObject {
       data: {
         selected_pain_point: {
           pain_point_title: string;
-          detailed_description: string;
+          description: string;
           affected_stakeholders: string[];
           current_solution_gaps: string[];
           ai_applicability_score: number;
@@ -105,6 +105,8 @@ export interface IdeaObject {
           business_impact_potential: number;
         };
         ai_solution_approach: {
+          title: string;
+          description: string;
           ai_technologies_required: string[];
           technical_complexity: string;
           data_requirements: string[];

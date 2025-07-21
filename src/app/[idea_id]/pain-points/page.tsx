@@ -14,6 +14,7 @@ import {
   Target,
   FileText
 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 export default function PainPointsPage() {
   const [data, setData] = useState<IdeaObject['ai_pain_point_analysis']['data'] | null>(null);
@@ -23,30 +24,56 @@ export default function PainPointsPage() {
   const ideaId = params.idea_id as string;
 
   useEffect(() => {
-    const fetchData = async () => {
+    let pollInterval: NodeJS.Timeout;
+
+    const startPainPointAnalysis = async () => {
       try {
-        // First, try to get the idea object
+        // First, check if analysis already exists
         const ideaObject = await apiService.getIdeaObject(ideaId);
         
-        // Check if pain point analysis exists (you may need to adjust this property name based on actual response)
         if (ideaObject.ai_pain_point_analysis) {
-          // Convert IdeaObject to PainPointData format
+          // Analysis already exists
           setData(ideaObject.ai_pain_point_analysis.data);
-        } else {
-          // If no pain point analysis, run the analysis
-          const result = await apiService.triggerPainPointAnalysis(ideaId);
-          setData(result.ai_pain_point_analysis.data);
+          setLoading(false);
+          return;
         }
+
+        // Trigger analysis without waiting for response
+        apiService.triggerPainPointAnalysis(ideaId).catch(error => {
+          console.error('Error triggering pain point analysis:', error);
+        });
+
+        // Start polling every 5 seconds
+        pollInterval = setInterval(async () => {
+          try {
+            const updatedIdeaObject = await apiService.getIdeaObject(ideaId);
+            
+            if (updatedIdeaObject.ai_pain_point_analysis) {
+              setData(updatedIdeaObject.ai_pain_point_analysis.data);
+              setLoading(false);
+              clearInterval(pollInterval);
+            }
+          } catch (error) {
+            console.error('Error polling for pain point data:', error);
+          }
+        }, 5000);
+
       } catch (error) {
-        console.error('Error fetching pain point data:', error);
-      } finally {
+        console.error('Error fetching initial idea object:', error);
         setLoading(false);
       }
     };
 
     if (ideaId) {
-      fetchData();
+      startPainPointAnalysis();
     }
+
+    // Cleanup interval on component unmount
+    return () => {
+      if (pollInterval) {
+        clearInterval(pollInterval);
+      }
+    };
   }, [ideaId]);
 
   if (loading) {
@@ -54,6 +81,7 @@ export default function PainPointsPage() {
   }
 
   const painPointData = data?.selected_pain_point;
+  const aiSolutionApproach = data?.ai_solution_approach;
 
   const handleTryOtherIdea = () => {
     router.push('/');
@@ -61,13 +89,30 @@ export default function PainPointsPage() {
 
   const handleRedo = async () => {
     setLoading(true);
+    
     try {
-      // For redo, always fetch fresh pain point analysis
-      const result = await apiService.triggerPainPointAnalysis(ideaId);
-      setData(result.ai_pain_point_analysis.data);
+      // Trigger fresh analysis without waiting for response
+      apiService.triggerPainPointAnalysis(ideaId).catch(error => {
+        console.error('Error triggering pain point analysis:', error);
+      });
+
+      // Start polling every 5 seconds for the result
+      const pollInterval = setInterval(async () => {
+        try {
+          const updatedIdeaObject = await apiService.getIdeaObject(ideaId);
+          
+          if (updatedIdeaObject.ai_pain_point_analysis) {
+            setData(updatedIdeaObject.ai_pain_point_analysis.data);
+            setLoading(false);
+            clearInterval(pollInterval);
+          }
+        } catch (error) {
+          console.error('Error polling for pain point data:', error);
+        }
+      }, 5000);
+
     } catch (error) {
-      console.error('Error refetching pain point data:', error);
-    } finally {
+      console.error('Error starting pain point analysis:', error);
       setLoading(false);
     }
   };
@@ -139,11 +184,14 @@ export default function PainPointsPage() {
           <div className="bg-gray-50 p-6 rounded-lg">
             <h2 className="text-xl font-semibold mb-2">Main pain point</h2>
             <h3 className="text-lg font-medium text-gray-800 mb-4">{painPointData?.pain_point_title}</h3>
-            <p className="text-gray-600">{painPointData?.detailed_description}</p>
+            <p className="text-gray-600">{painPointData?.description}</p>
+            <Button variant="link" className="mt-2 p-0 h-auto">
+              Learn more
+            </Button>
           </div>
           <div className="bg-gray-50 p-6 rounded-lg">
             <h2 className="text-xl font-semibold mb-2">AI Solution</h2>
-            <p className="text-gray-600 mb-4">This pain point is a direct consequence of information overload and the limitations of traditional search methods, which AI is uniquely positioned to solve.</p>
+            <p className="text-gray-600 mb-4">{aiSolutionApproach?.description}</p>
             <div className="flex items-center justify-between mb-2">
               <span>AI Applicability Score</span>
               <div className="flex items-center">
