@@ -19,6 +19,7 @@ import { Button } from '@/components/ui/button';
 export default function PainPointsPage() {
   const [data, setData] = useState<IdeaObject['ai_pain_point_analysis']['data'] | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isAnalysisRunning, setIsAnalysisRunning] = useState(false);
   const router = useRouter();
   const params = useParams();
   const ideaId = params.idea_id as string;
@@ -30,14 +31,17 @@ export default function PainPointsPage() {
       try {
         // First, check if analysis already exists
         const ideaObject = await apiService.getIdeaObject(ideaId);
+        setLoading(false);
         
         if (ideaObject.ai_pain_point_analysis) {
           // Analysis already exists
           setData(ideaObject.ai_pain_point_analysis.data);
-          setLoading(false);
           return;
         }
 
+        // If no analysis exists, show creative loading and start analysis
+        setIsAnalysisRunning(true);
+        
         // Trigger analysis without waiting for response
         apiService.triggerPainPointAnalysis(ideaId).catch(error => {
           console.error('Error triggering pain point analysis:', error);
@@ -50,7 +54,7 @@ export default function PainPointsPage() {
             
             if (updatedIdeaObject.ai_pain_point_analysis) {
               setData(updatedIdeaObject.ai_pain_point_analysis.data);
-              setLoading(false);
+              setIsAnalysisRunning(false);
               clearInterval(pollInterval);
             }
           } catch (error) {
@@ -61,6 +65,7 @@ export default function PainPointsPage() {
       } catch (error) {
         console.error('Error fetching initial idea object:', error);
         setLoading(false);
+        setIsAnalysisRunning(false);
       }
     };
 
@@ -77,6 +82,78 @@ export default function PainPointsPage() {
   }, [ideaId]);
 
   if (loading) {
+    return (
+      <div className="flex min-h-screen bg-white">
+        <aside className="w-64 bg-gray-50 p-8 border-r">
+          <nav>
+            <ul>
+              <li className="mb-4">
+                <div className="flex items-center p-2">
+                  <div className="mr-2 h-4 w-4 bg-gray-200 rounded animate-pulse"></div>
+                  <div className="h-4 w-24 bg-gray-200 rounded animate-pulse"></div>
+                </div>
+              </li>
+              <li className="mb-4">
+                <div className="flex items-center bg-blue-100 rounded-lg p-2">
+                  <div className="mr-2 h-4 w-4 bg-blue-200 rounded animate-pulse"></div>
+                  <div className="h-4 w-20 bg-blue-200 rounded animate-pulse"></div>
+                </div>
+              </li>
+              {[1, 2, 3, 4, 5, 6].map((i) => (
+                <li key={i} className="mb-4">
+                  <div className="flex items-center p-2">
+                    <div className="mr-2 h-4 w-4 bg-gray-200 rounded animate-pulse"></div>
+                    <div className="h-4 w-16 bg-gray-200 rounded animate-pulse"></div>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </aside>
+
+        <main className="flex-1 p-8">
+          <header className="flex justify-between items-center mb-8">
+            <div className="h-8 w-48 bg-gray-200 rounded animate-pulse"></div>
+            <div className="flex space-x-2">
+              <div className="h-8 w-24 bg-gray-200 rounded animate-pulse"></div>
+              <div className="h-8 w-16 bg-gray-200 rounded animate-pulse"></div>
+              <div className="h-8 w-20 bg-gray-200 rounded animate-pulse"></div>
+            </div>
+          </header>
+
+          <div className="grid grid-cols-2 gap-8">
+            <div className="bg-gray-50 p-6 rounded-lg">
+              <div className="h-6 w-32 bg-gray-200 rounded mb-2 animate-pulse"></div>
+              <div className="h-5 w-48 bg-gray-200 rounded mb-4 animate-pulse"></div>
+              <div className="h-4 w-full bg-gray-200 rounded mb-2 animate-pulse"></div>
+              <div className="h-4 w-3/4 bg-gray-200 rounded mb-4 animate-pulse"></div>
+              <div className="h-4 w-20 bg-gray-200 rounded animate-pulse"></div>
+            </div>
+            <div className="bg-gray-50 p-6 rounded-lg">
+              <div className="h-6 w-24 bg-gray-200 rounded mb-2 animate-pulse"></div>
+              <div className="h-4 w-full bg-gray-200 rounded mb-4 animate-pulse"></div>
+              <div className="flex items-center justify-between mb-2">
+                <div className="h-4 w-32 bg-gray-200 rounded animate-pulse"></div>
+                <div className="flex items-center">
+                  <div className="w-32 h-2 bg-gray-200 rounded-full mr-2 animate-pulse"></div>
+                  <div className="h-4 w-16 bg-gray-200 rounded animate-pulse"></div>
+                </div>
+              </div>
+              <div className="flex items-center justify-between">
+                <div className="h-4 w-36 bg-gray-200 rounded animate-pulse"></div>
+                <div className="flex items-center">
+                  <div className="w-32 h-2 bg-gray-200 rounded-full mr-2 animate-pulse"></div>
+                  <div className="h-4 w-16 bg-gray-200 rounded animate-pulse"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
+  if (isAnalysisRunning) {
     return <PainPointLoadingScreen />;
   }
 
@@ -88,7 +165,7 @@ export default function PainPointsPage() {
   };
 
   const handleRedo = async () => {
-    setLoading(true);
+    setIsAnalysisRunning(true);
     
     try {
       // Trigger fresh analysis without waiting for response
@@ -103,7 +180,7 @@ export default function PainPointsPage() {
           
           if (updatedIdeaObject.ai_pain_point_analysis) {
             setData(updatedIdeaObject.ai_pain_point_analysis.data);
-            setLoading(false);
+            setIsAnalysisRunning(false);
             clearInterval(pollInterval);
           }
         } catch (error) {
@@ -113,7 +190,7 @@ export default function PainPointsPage() {
 
     } catch (error) {
       console.error('Error starting pain point analysis:', error);
-      setLoading(false);
+      setIsAnalysisRunning(false);
     }
   };
 
@@ -196,7 +273,7 @@ export default function PainPointsPage() {
               <span>AI Applicability Score</span>
               <div className="flex items-center">
                 <div className="w-32 h-2 bg-green-200 rounded-full mr-2">
-                  <div className="h-2 bg-green-500 rounded-full" style={{ width: `${painPointData?.ai_applicability_score * 10}%` }}></div>
+                  <div className="h-2 bg-green-500 rounded-full" style={{ width: `${(painPointData?.ai_applicability_score || 0) * 10}%` }}></div>
                 </div>
                 <span>{painPointData?.ai_applicability_score}/10 High</span>
               </div>
@@ -205,7 +282,7 @@ export default function PainPointsPage() {
               <span>Business Impact Potential</span>
               <div className="flex items-center">
                 <div className="w-32 h-2 bg-green-200 rounded-full mr-2">
-                  <div className="h-2 bg-green-500 rounded-full" style={{ width: `${painPointData?.business_impact_potential * 10}%` }}></div>
+                  <div className="h-2 bg-green-500 rounded-full" style={{ width: `${(painPointData?.business_impact_potential || 0) * 10}%` }}></div>
                 </div>
                 <span>{painPointData?.business_impact_potential}/10 High</span>
               </div>

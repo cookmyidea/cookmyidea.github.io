@@ -97,7 +97,7 @@ export const CreativeLoadingScreen = () => {
         {/* Time Estimate */}
         <div className="text-center">
           <p className="text-sm text-gray-500">
-            ⏱️ This usually takes 30-40 seconds
+            ⏱️ This usually takes less than 1 minute
           </p>
           <p className="text-xs text-gray-400 mt-1">
             Great ideas are worth the wait!

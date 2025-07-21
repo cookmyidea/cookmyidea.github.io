@@ -112,13 +112,6 @@ export default function EvaluationPage() {
 
   const { business_idea, analysis } = analysisData;
 
-  // Get technical difficulty and market research specifically
-  const technicalDifficulty = analysis.technical_difficulty;
-  const marketResearch = analysis.market_research;
-  const otherAnalysis = Object.entries(analysis).filter(([key]) => 
-    key !== 'technical_difficulty' && key !== 'market_research'
-  );
-
   return (
     <div className="min-h-screen bg-white text-gray-800">
       <div className="container mx-auto px-4 py-16">
@@ -140,7 +133,6 @@ export default function EvaluationPage() {
               {Object.entries(analysis).map(([key, value]) => {
                 // Enhanced styling for technical difficulty and market research
                 const isEnhanced = key === 'technical_difficulty' || key === 'market_research';
-                const isReverse = key === 'technical_difficulty'; // Lower score is better for technical difficulty
                 
                 if (isEnhanced) {
                   return (
