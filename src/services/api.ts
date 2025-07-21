@@ -201,6 +201,61 @@ export interface IdeaObject {
       duration: number;
       model: string;
     };
+    prototype_description: {
+      data: {
+        prototype_overview: {
+          name: string;
+          tagline: string;
+          core_value_proposition: string;
+          target_users: string[];
+          primary_use_case: string;
+          business_context: string;
+        };
+        features: Array<{
+          feature_name: string;
+          description: string;
+          user_benefit: string;
+          technical_complexity: string;
+          priority: string;
+          validation_metric: string;
+        }>;
+        user_interface: {
+          interface_type: string;
+          key_screens: Array<{
+            screen_name: string;
+            purpose: string;
+            main_elements: string[];
+            user_actions: string[];
+            success_indicators: string[];
+          }>;
+          design_principles: string[];
+          accessibility_considerations: string[];
+        };
+        technical_implementation: {
+          ai_integration: string;
+          data_sources: string[];
+          api_endpoints: string[];
+          performance_targets: string[];
+          security_requirements: string[];
+        };
+        validation_metrics: Array<{
+          metric: string;
+          measurement: string;
+          success_threshold: string;
+          collection_method: string;
+        }>;
+        user_testing_plan: {
+          testing_methods: string[];
+          target_participants: string[];
+          success_criteria: string[];
+        };
+        prototype_limitations: string[];
+        next_iteration_features: string[];
+      };
+      usage: Usage;
+      duration: number;
+      model: string;
+    };
 
 }
 
@@ -241,6 +296,10 @@ class ApiService {
 
   async triggerSolutionAnalysis(ideaId: string): Promise<IdeaObject> {
     return this.makeRequest<IdeaObject>('run_solution', { idea_id: ideaId });
+  }
+
+  async triggerPrototypeAnalysis(ideaId: string): Promise<IdeaObject> {
+    return this.makeRequest<IdeaObject>('run_prototype', { idea_id: ideaId });
   }
 
   async getIdeaObject(ideaId: string): Promise<IdeaObject> {
