@@ -1,0 +1,182 @@
+const BASE_URL = 'https://enginer.app.n8n.cloud';
+
+// Different webhook URLs for different operations
+const WEBHOOK_URL = `${BASE_URL}/webhook/9f79471d-b9ba-48c3-97f2-cccaa3df9655`;
+
+
+export interface InitialAnalysisItem {
+  score: number;
+  assessment: string;
+  summary: string;
+}
+
+export interface InitialAnalysis {
+  [key: string]: InitialAnalysisItem;
+}
+
+export interface InitialAnalysisData {
+
+        business_idea: string;
+        analysis: InitialAnalysis;
+        user_id: string;
+        idea_id: string;
+}
+
+export interface PainPointData {
+
+        selected_pain_point: {
+          pain_point_title: string;
+          detailed_description: string;
+          ai_applicability_score: number;
+          business_impact_potential: number;
+        };
+      };
+
+
+export interface SubmitIdeaRequest {
+  idea: string;
+  user_id: string;
+}
+
+export interface SubmitIdeaResponse {
+  _id: string;
+}
+
+
+
+export interface Usage {
+  prompt_tokens: number;
+  completion_tokens: number;
+  total_tokens: number;
+  cost: number;
+  is_byok: boolean;
+  prompt_tokens_details: {
+    cached_tokens: number;
+  };
+  cost_details: {
+    upstream_inference_cost: number | null;
+  };
+  completion_tokens_details: {
+    reasoning_tokens: number;
+  };
+}
+
+export interface IdeaObject {
+    _id: string;
+    idea: string;
+    user_id: string;
+    initial_analyze: {
+      data: {
+        business_idea: string;
+        analysis: InitialAnalysis;
+        strengths: Array<{
+          name: string;
+          score: number;
+          analysis: string;
+        }>;
+        challenges: Array<{
+          name: string;
+          score: number;
+          analysis: string;
+        }>;
+        overall_assessment: {
+          viability_score: number;
+          assessment: string;
+          recommendation: string;
+        };
+        final_verdict: {
+          score: string;
+          assestment: string;
+          description: string;
+        };
+      };
+      model: string;
+      usage: Usage;
+    };
+    ai_pain_point_analysis: {
+      data: {
+        selected_pain_point: {
+          pain_point_title: string;
+          detailed_description: string;
+          affected_stakeholders: string[];
+          current_solution_gaps: string[];
+          ai_applicability_score: number;
+          selection_rationale: string;
+          business_impact_potential: number;
+        };
+        ai_solution_approach: {
+          ai_technologies_required: string[];
+          technical_complexity: string;
+          data_requirements: string[];
+          model_types: string[];
+          integration_challenges: string[];
+          development_timeline: string;
+        };
+        competitive_analysis: {
+          existing_ai_solutions: string[];
+          competitive_gaps: string[];
+          differentiation_opportunities: string[];
+          sustainable_advantage_potential: number;
+          market_positioning: string;
+        };
+        success_metrics: Array<{
+          metric_name: string;
+          measurement_method: string;
+          target_improvement: string;
+          baseline_current_state: string;
+        }>;
+        risk_assessment: Array<{
+          risk_type: string;
+          probability: string;
+          impact: string;
+          mitigation_strategy: string;
+        }>;
+      };
+      usage: Usage;
+      duration: number;
+      model: string;
+    };
+
+}
+
+class ApiService {
+  private async makeRequest<T>(
+    endpoint: string, 
+    data: any,
+    options: RequestInit = {}
+  ): Promise<T> {
+    const response = await fetch(WEBHOOK_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...options.headers,
+      },
+      body: JSON.stringify({_endpoint: endpoint, ...data}),
+      ...options,
+    });
+
+    if (!response.ok) {
+      throw new Error(`API request failed: ${response.status} ${response.statusText}`);
+    }
+
+    return response.json();
+  }
+
+  async submitIdea(request: SubmitIdeaRequest): Promise<SubmitIdeaResponse> {
+    return this.makeRequest<SubmitIdeaResponse>('submit_idea', request);
+  }
+
+  async triggerInitialAnalyse(ideaId: string): Promise<IdeaObject> {
+    return this.makeRequest<IdeaObject>('run_initial_analysis', { idea_id: ideaId });
+  }
+
+  async triggerPainPointAnalysis(ideaId: string): Promise<IdeaObject> {
+    return this.makeRequest<IdeaObject>('run_pain_point_analysis', { idea_id: ideaId });
+  }
+
+  async getIdeaObject(ideaId: string): Promise<IdeaObject> {
+    return this.makeRequest<IdeaObject>('get_idea', { idea_id: ideaId });
+  }
+}
+
+export const apiService = new ApiService();
