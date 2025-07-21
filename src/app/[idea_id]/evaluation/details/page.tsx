@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { CreativeLoadingScreen } from '@/components/CreativeLoadingScreen';
 import { apiService, type IdeaObject } from '@/services/api';
 import { ArrowLeft, TrendingUp, TrendingDown, AlertCircle, CheckCircle, Star } from 'lucide-react';
 
@@ -48,7 +47,117 @@ export default function EvaluationDetailsPage() {
   };
 
   if (isLoading) {
-    return <CreativeLoadingScreen />;
+    return (
+      <div className="min-h-screen bg-gray-50">
+        {/* Header Skeleton */}
+        <div className="bg-white shadow-sm border-b">
+          <div className="container mx-auto px-4 py-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-4">
+                <div className="h-8 w-32 bg-gray-200 rounded animate-pulse"></div>
+                <div>
+                  <div className="h-6 w-40 bg-gray-200 rounded mb-2 animate-pulse"></div>
+                  <div className="h-4 w-64 bg-gray-200 rounded animate-pulse"></div>
+                </div>
+              </div>
+              <div className="text-right">
+                <div className="h-6 w-16 bg-gray-200 rounded mb-1 animate-pulse"></div>
+                <div className="h-4 w-20 bg-gray-200 rounded animate-pulse"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="container mx-auto px-4 py-8">
+          <div className="space-y-8">
+            {/* Overall Assessment Skeleton */}
+            <div className="bg-white rounded-xl p-6 shadow-sm">
+              <div className="flex items-center mb-4">
+                <div className="mr-2 h-5 w-5 bg-gray-200 rounded animate-pulse"></div>
+                <div className="h-6 w-40 bg-gray-200 rounded animate-pulse"></div>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                <div className="text-center p-4 bg-blue-50 rounded-lg">
+                  <div className="h-8 w-12 bg-gray-200 rounded mx-auto mb-2 animate-pulse"></div>
+                  <div className="h-4 w-20 bg-gray-200 rounded mx-auto animate-pulse"></div>
+                </div>
+                <div className="text-center p-4 bg-green-50 rounded-lg">
+                  <div className="h-6 w-16 bg-gray-200 rounded mx-auto mb-2 animate-pulse"></div>
+                  <div className="h-4 w-20 bg-gray-200 rounded mx-auto animate-pulse"></div>
+                </div>
+                <div className="col-span-1 md:col-span-1 p-4 bg-gray-50 rounded-lg">
+                  <div className="h-4 w-24 bg-gray-200 rounded mb-2 animate-pulse"></div>
+                  <div className="h-4 w-full bg-gray-200 rounded animate-pulse"></div>
+                </div>
+              </div>
+              <div className="p-4 bg-indigo-50 rounded-lg">
+                <div className="h-5 w-24 bg-gray-200 rounded mb-2 animate-pulse"></div>
+                <div className="h-4 w-full bg-gray-200 rounded animate-pulse"></div>
+              </div>
+            </div>
+
+            {/* Analysis Categories Skeleton */}
+            <div className="bg-white rounded-xl p-6 shadow-sm">
+              <div className="h-6 w-32 bg-gray-200 rounded mb-6 animate-pulse"></div>
+              <div className="space-y-6">
+                {[1, 2, 3, 4, 5].map((i) => (
+                  <div key={i} className="border-l-4 border-blue-200 pl-6">
+                    <div className="flex justify-between items-center mb-3">
+                      <div className="h-6 w-32 bg-gray-200 rounded animate-pulse"></div>
+                      <div className="flex items-center space-x-2">
+                        <div className="h-5 w-12 bg-gray-200 rounded animate-pulse"></div>
+                        <div className="h-5 w-16 bg-gray-200 rounded animate-pulse"></div>
+                      </div>
+                    </div>
+                    <div className="h-2 w-full bg-gray-200 rounded mb-4 animate-pulse"></div>
+                    <div className="h-4 w-full bg-gray-200 rounded mb-2 animate-pulse"></div>
+                    <div className="h-4 w-3/4 bg-gray-200 rounded animate-pulse"></div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Strengths and Challenges Skeleton */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              {[1, 2].map((section) => (
+                <div key={section} className="bg-white rounded-xl p-6 shadow-sm">
+                  <div className="flex items-center mb-4">
+                    <div className="mr-2 h-5 w-5 bg-gray-200 rounded animate-pulse"></div>
+                    <div className="h-6 w-20 bg-gray-200 rounded animate-pulse"></div>
+                  </div>
+                  <div className="space-y-4">
+                    {[1, 2, 3].map((item) => (
+                      <div key={item} className="p-4 bg-gray-50 rounded-lg">
+                        <div className="flex justify-between items-center mb-2">
+                          <div className="h-5 w-32 bg-gray-200 rounded animate-pulse"></div>
+                          <div className="flex items-center">
+                            <div className="mr-1 h-4 w-4 bg-gray-200 rounded animate-pulse"></div>
+                            <div className="h-4 w-8 bg-gray-200 rounded animate-pulse"></div>
+                          </div>
+                        </div>
+                        <div className="h-4 w-full bg-gray-200 rounded mb-1 animate-pulse"></div>
+                        <div className="h-4 w-2/3 bg-gray-200 rounded animate-pulse"></div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Navigation Actions Skeleton */}
+            <div className="bg-white rounded-xl p-6 shadow-sm">
+              <div className="flex justify-between items-center">
+                <div className="h-10 w-32 bg-gray-200 rounded animate-pulse"></div>
+                <div className="flex space-x-4">
+                  <div className="h-10 w-32 bg-gray-200 rounded animate-pulse"></div>
+                  <div className="h-10 w-40 bg-gray-200 rounded animate-pulse"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   if (!analysisData) {
@@ -198,17 +307,6 @@ export default function EvaluationDetailsPage() {
               >
                 ← Back to Evaluation
               </Button>
-              <div className="flex space-x-4">
-                <Button 
-                  variant="outline" 
-                  onClick={() => router.push('/')}
-                >
-                  Try Another Idea
-                </Button>
-                <Button onClick={() => router.push(`/${ideaId}/pain-points`)}>
-                  View Pain Points →
-                </Button>
-              </div>
             </div>
           </div>
         </div>

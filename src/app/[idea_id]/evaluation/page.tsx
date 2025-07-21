@@ -5,7 +5,6 @@ import { useRouter, useParams } from 'next/navigation';
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { apiService, type IdeaObject } from '@/services/api';
-import { CreativeLoadingScreen } from '@/components/CreativeLoadingScreen';
 
 export default function EvaluationPage() {
   const [analysisData, setAnalysisData] = useState<IdeaObject['initial_analyze']['data'] | null>(null);
@@ -96,7 +95,40 @@ export default function EvaluationPage() {
   }
 
   if (isAnalysisRunning) {
-    return <CreativeLoadingScreen />;
+    return (
+      <div className="min-h-screen bg-white">
+        <div className="container mx-auto px-4 py-16">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            {/* Left side - Business Idea Title Skeleton */}
+            <div className="lg:pr-16">
+              <div className="h-12 bg-gray-200 rounded-lg mb-8 animate-pulse"></div>
+              <div className="h-8 bg-gray-200 rounded-lg w-3/4 mb-8 animate-pulse"></div>
+              <div className="flex space-x-4">
+                <div className="h-10 w-32 bg-gray-200 rounded-md animate-pulse"></div>
+                <div className="h-10 w-32 bg-gray-200 rounded-md animate-pulse"></div>
+              </div>
+            </div>
+
+            {/* Right side - Progress Bars Skeleton */}
+            <div>
+              <div className="space-y-10">
+                {[1, 2, 3, 4, 5].map((i) => (
+                  <div key={i}>
+                    <div className="flex justify-between items-center mb-2">
+                      <div className="h-6 bg-gray-200 rounded w-1/3 animate-pulse"></div>
+                      <div className="h-5 bg-gray-200 rounded w-16 animate-pulse"></div>
+                    </div>
+                    <div className="h-2 bg-gray-200 rounded mb-4 animate-pulse"></div>
+                    <div className="h-4 bg-gray-200 rounded w-3/4 mb-2 animate-pulse"></div>
+                    <div className="h-4 bg-gray-200 rounded w-1/2 animate-pulse"></div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   if (!analysisData) {
