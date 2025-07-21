@@ -256,6 +256,36 @@ export interface IdeaObject {
       duration: number;
       model: string;
     };
+    monetization_strategies: {
+      data: Array<{
+        strategy_name: string;
+        model_type: string;
+        target_customer: string;
+        value_proposition: string;
+        pricing_structure: {
+          pricing_model: string;
+          price_points: string[];
+          billing_frequency: string;
+          free_tier: boolean;
+          pricing_tiers: string[];
+        };
+        revenue_projections: {
+          year_1: string;
+          year_2: string;
+          year_3: string;
+          assumptions: string[];
+          sensitivity_analysis: string[];
+        };
+        implementation_requirements: string[];
+        pros: string[];
+        cons: string[];
+        market_validation_needed: string[];
+        competitive_benchmarking: string;
+      }>;
+      usage: Usage;
+      duration: number;
+      model: string;
+    };
 
 }
 
@@ -300,6 +330,10 @@ class ApiService {
 
   async triggerPrototypeAnalysis(ideaId: string): Promise<IdeaObject> {
     return this.makeRequest<IdeaObject>('run_prototype', { idea_id: ideaId });
+  }
+
+  async triggerMonetizationAnalysis(ideaId: string): Promise<IdeaObject> {
+    return this.makeRequest<IdeaObject>('run_monetization', { idea_id: ideaId });
   }
 
   async getIdeaObject(ideaId: string): Promise<IdeaObject> {
