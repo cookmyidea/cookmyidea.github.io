@@ -286,6 +286,63 @@ export interface IdeaObject {
       duration: number;
       model: string;
     };
+    landing_pages: {
+      data: Array<{
+        page_name: string;
+        primary_objective: string;
+        target_audience: string;
+        monetization_strategy: string;
+        unique_selling_proposition: string;
+        prompt: string;
+        page_structure: {
+          hero_section: {
+            headline: string;
+            subheadline: string;
+            value_proposition: string;
+            cta_button: string;
+            hero_image_description: string;
+            trust_indicators: string[];
+          };
+          problem_section: {
+            problem_statement: string;
+            pain_point_bullets: string[];
+            current_solution_issues: string[];
+            impact_statistics: string[];
+          };
+          solution_section: {
+            solution_headline: string;
+            key_benefits: string[];
+            feature_highlights: string[];
+            ai_advantage: string;
+            demo_description: string;
+          };
+          social_proof: {
+            testimonials: string[];
+            case_studies: string[];
+            stats: string[];
+            trust_badges: string[];
+          };
+          pricing_section: {
+            pricing_headline: string;
+            pricing_options: string[];
+            pricing_cta: string;
+            value_justification: string[];
+          };
+          cta_section: {
+            final_cta: string;
+            urgency_elements: string[];
+            risk_reversal: string;
+            contact_information: string;
+          };
+        };
+        conversion_elements: string[];
+        ab_testing_variations: string[];
+        mobile_optimization: string[];
+      }>;
+      usage: Usage;
+      duration: number;
+      model: string;
+    };
 
 }
 
@@ -334,6 +391,10 @@ class ApiService {
 
   async triggerMonetizationAnalysis(ideaId: string): Promise<IdeaObject> {
     return this.makeRequest<IdeaObject>('run_monetization', { idea_id: ideaId });
+  }
+
+  async triggerLandingPagesAnalysis(ideaId: string): Promise<IdeaObject> {
+    return this.makeRequest<IdeaObject>('run_landing_pages', { idea_id: ideaId });
   }
 
   async getIdeaObject(ideaId: string): Promise<IdeaObject> {

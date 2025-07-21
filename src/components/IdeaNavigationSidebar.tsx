@@ -7,7 +7,8 @@ import {
   CircleDollarSign,
   PanelTop,
   Target,
-  FileText
+  FileText,
+  Megaphone
 } from 'lucide-react';
 
 interface NavigationItem {
@@ -22,7 +23,7 @@ interface NavigationItem {
 
 interface IdeaNavigationSidebarProps {
   ideaId: string;
-  currentStep: 'evaluation' | 'pain-points' | 'solution' | 'prototype' | 'monetization' | 'landing-pages' | 'ads-campaign' | 'mvp-document';
+  currentStep: 'evaluation' | 'pain-points' | 'solution' | 'prototype' | 'monetization' | 'landing-pages' | 'ads-campaign' | 'mvp-document' | 'testing';
   isLoading?: boolean;
 }
 
@@ -84,8 +85,8 @@ export function IdeaNavigationSidebar({ ideaId, currentStep, isLoading = false }
     },
     {
       key: 'ads-campaign',
-      label: 'Ads Test Campaign',
-      icon: Target,
+      label: 'Ads Campaign',
+      icon: Megaphone,
       href: `/${ideaId}/ads-campaign`,
       isActive: currentStep === 'ads-campaign',
       isDisabled: true,
@@ -100,15 +101,35 @@ export function IdeaNavigationSidebar({ ideaId, currentStep, isLoading = false }
       isDisabled: true,
       order: 8,
     },
+    {
+      key: 'testing',
+      label: 'Testing',
+      icon: Target,
+      href: `/${ideaId}/testing`,
+      isActive: currentStep === 'testing',
+      isDisabled: true,
+      order: 9,
+    }
   ];
 
   // Find current step order and enable next item
   const currentStepOrder = allNavigationItems.find(item => item.isActive)?.order || 0;
   
-  const navigationItems = allNavigationItems.map(item => ({
-    ...item,
-    isDisabled: item.order > currentStepOrder + 1, // Enable current and next item only
-  }));
+  const navigationItems = allNavigationItems.map(item => {
+    // If we're on the testing step (final step), disable all other steps except completed ones
+    if (currentStep === 'testing') {
+      return {
+        ...item,
+        isDisabled: !item.isActive && item.order !== 9, // Only testing step is enabled
+      };
+    }
+    
+    // Normal flow: enable current and next item only
+    return {
+      ...item,
+      isDisabled: item.order > currentStepOrder + 1,
+    };
+  });
 
   if (isLoading) {
     return (

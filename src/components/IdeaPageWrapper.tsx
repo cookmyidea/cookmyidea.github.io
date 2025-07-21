@@ -3,7 +3,7 @@ import { IdeaNavigationSidebar } from './IdeaNavigationSidebar';
 
 interface IdeaPageWrapperProps {
   ideaId: string;
-  currentStep: 'evaluation' | 'pain-points' | 'solution' | 'prototype' | 'monetization' | 'landing-pages' | 'ads-campaign' | 'mvp-document';
+  currentStep: 'evaluation' | 'pain-points' | 'solution' | 'prototype' | 'monetization' | 'landing-pages' | 'ads-campaign' | 'mvp-document' | 'testing';
   children: ReactNode;
   layout?: 'sidebar' | 'full-width';
   isLoading?: boolean;
